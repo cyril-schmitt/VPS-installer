@@ -1,5 +1,5 @@
 apt-get -y update
-apt-get -y install build-essential git-core curl libssl-dev libreadline5 libreadline5-dev zlib1g zlib1g-dev libmysqlclient-dev libcurl4-op$
+apt-get -y install build-essential git-core curl libssl-dev libreadline5 libreadline5-dev zlib1g zlib1g-dev libsqlite3-dev libmysqlclient-dev libcurl4-openssl-dev libxslt-dev libxml2-dev python-software-properties htop sudo
 
 # nginx
 add-apt-repository ppa:nginx/stable
@@ -17,12 +17,17 @@ apt-get -y install mongodb-10gen
 apt-get -y install telnet postfix
 
 # Node.js
-add-apt-repository ppa:chris-lea/node.js
-apt-get -y update
-apt-get -y install nodejs
+git clone https://github.com/joyent/node.git
+cd node
+# 'git tag' shows all available versions: select the latest stable.
+#git checkout v0.6.8
+./configure #--openssl-libpath=/usr/lib/ssl
+make
+make install
 
 # Add deployer user
-adduser deployer --ingroup admin
+adduser deployer --ingroup adm
+usermod -aG sudo deployer
 su deployer
 cd
 
@@ -45,11 +50,11 @@ pushd /tmp
   ./install.sh
 popd
 
-rbenv install 1.9.3-p429
-rbenv global 1.9.3-p429
-rbenv rehash
+sudo rbenv install 1.9.3-p429
+sudo rbenv global 1.9.3-p429
+sudo rbenv rehash
 
-gem install bundler --no-ri --no-rdoc
+sudo gem install bundler --no-ri --no-rdoc
 
 # get to know github.com
 #ssh git@github.com
